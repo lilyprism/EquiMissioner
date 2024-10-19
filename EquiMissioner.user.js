@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EquiMissioner
 // @namespace    https://github.com/lilyprism/EquiMissioner
-// @version      0.7
+// @version      0.8
 // @description  Best OpenSource Hero Zero Utility Extension
 // @author       LilyPrism
 // @license      GPL3.0
