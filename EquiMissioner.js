@@ -4,7 +4,10 @@
 // @version      0.1
 // @description  Best OpenSource Hero Zero Utility Extension
 // @author       LilyPrism
+// @license      GPL3.0
 // @match        https://*.herozerogame.com
+// @downloadURL  https://github.com/lilyprism/EquiMissioner/blob/main/EquiMissioner.js?raw=true
+// @updateURL    https://github.com/lilyprism/EquiMissioner/blob/main/EquiMissioner.js?raw=true
 // @icon         https://github.com/lilyprism/EquiMissioner/blob/main/equimissioner.jpg?raw=true
 // @require      https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js
 // @resource     IMPORTED_CSS https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css
