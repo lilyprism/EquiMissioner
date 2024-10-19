@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EquiMissioner
 // @namespace    https://github.com/lilyprism/EquiMissioner
-// @version      0.2
+// @version      0.3
 // @description  Best OpenSource Hero Zero Utility Extension
 // @author       LilyPrism
 // @license      GPL3.0
@@ -56,6 +56,8 @@
     let currentMissionFocus = GM_getValue("mission-focus", MissionFocus.XP);
     let currentFPS = GM_getValue("fps", 30);
     let max_energy_per_quest = GM_getValue("max-energy-quest", 20);
+    let quest_sense_booster_active = GM_getValue("sense-booster", false);
+    let train_sense_booster_active = GM_getValue("train-sense-booster", false);
 
     function createScriptUI() {
         const mainDiv = document.createElement('div');
@@ -68,7 +70,7 @@
                 </button>
                 <div class="position-absolute top-0" style="height: 100vh;background: #262626cc">
                     <div class="collapse collapse-horizontal" id="missioner-cont">
-                        <div class="pt-5 px-5" style="width: 300px;">
+                        <div class="pt-5 px-3" style="width: 300px;">
                             <div class="card text-bg-dark mb-2">
                                 <div class="card-body">
                                     <h5 class="card-title">Best Mission</h5>
@@ -92,11 +94,25 @@
                                     <button id="mission-go" class="btn btn-success w-100" style="padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x)!important;" type="button">Go</button>
                                 </div>
                             </div>
-                            <div class="card text-bg-dark">
+                            <div class="card text-bg-dark mb-2">
                                 <div class="card-body">
                                     <h5 class="card-title">FPS Unlock</h5>
                                     <label for="fps-input" class="form-label" id="fps-input-label">Current FPS: ${currentFPS}</label>
                                     <input type="range" class="form-range" min="30" max="160" step="10" id="fps-input" value="${currentFPS}">
+                                </div>
+                            </div>
+                            <div class="card text-bg-dark">
+                                <div class="card-body">
+                                    <h5 class="card-title">Exploits</h5>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="quest-sense-booster">
+                                        <label class="form-check-label" for="quest-sense-booster">Quest Sense Booster</label>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="train-sense-booster">
+                                        <label class="form-check-label" for="train-sense-booster">Train Sense Booster</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -107,14 +123,28 @@
         document.body.appendChild(mainDiv);
 
         document.getElementById('quest-focus').value = currentMissionFocus;
+        document.getElementById('quest-sense-booster').checked = quest_sense_booster_active;
+        document.getElementById('train-sense-booster').checked = train_sense_booster_active;
         document.getElementById("fps-input").addEventListener("input", updateFPS);
         document.getElementById("mission-go").addEventListener("click", executeBestMission);
         document.getElementById("quest-focus").addEventListener("change", updateMissionFocus);
         document.getElementById("max-energy-quest").addEventListener("change", updateMaxEnergyQuest);
+        document.getElementById("quest-sense-booster").addEventListener("change", updateQuestSenseBooster);
+        document.getElementById("train-sense-booster").addEventListener("change", updateTrainSenseBooster);
     }
 
-    function updateMaxEnergyQuest(event) {
-        max_energy_per_quest = event.target.value;
+    function updateTrainSenseBooster(value) {
+        train_sense_booster_active = value.target.checked;
+        GM_setValue("train-sense-booster", train_sense_booster_active);
+    }
+
+    function updateQuestSenseBooster(value) {
+        quest_sense_booster_active = value.target.checked;
+        GM_setValue("sense-booster", quest_sense_booster_active);
+    }
+
+    function updateMaxEnergyQuest(value) {
+        max_energy_per_quest = value.target.value;
         GM_setValue("max-energy-quest", max_energy_per_quest);
         updateUIWithBestQuest(getBestQuest());
     }
@@ -160,6 +190,29 @@
         }
     }
 
+    setInterval(function() {
+        if (!unsafeWindow.quest || !unsafeWindow.quest._btnSenseBooster)
+            return;
+
+        if (unsafeWindow.quest._btnSenseBooster.get_visible() === quest_sense_booster_active) {
+            unsafeWindow.quest._btnSenseBooster.set_visible(!quest_sense_booster_active);
+            unsafeWindow.quest._btnMostXPQuest.set_visible(quest_sense_booster_active);
+            unsafeWindow.quest._btnMostGameCurrencyQuest.set_visible(quest_sense_booster_active);
+        }
+    }, 200);
+
+    setInterval(function() {
+        if (!unsafeWindow.train || !unsafeWindow.train._btnTrainingSenseBooster)
+            return;
+
+        if (unsafeWindow.train._btnTrainingSenseBooster.get_visible() === train_sense_booster_active) {
+            unsafeWindow.train._btnTrainingSenseBooster.set_visible(!train_sense_booster_active);
+            unsafeWindow.train._btnMostGameCurrencyTrainingQuest.set_visible(train_sense_booster_active);
+            unsafeWindow.train._btnMostTrainingProgressTrainingQuest.set_visible(train_sense_booster_active);
+            unsafeWindow.train._btnMostXPTrainingQuest.set_visible(train_sense_booster_active);
+        }
+    }, 200);
+
     function setupRequestProxy() {
         const originalOpen = XMLHttpRequest.prototype.open;
         const originalSend = XMLHttpRequest.prototype.send;
@@ -192,7 +245,7 @@
     }
 
     function handleQuestChange(quests) {
-        currentQuests = quests.map(quest => ({ ...quest, rewards: JSON.parse(quest.rewards) }));
+        currentQuests = quests.map(quest => ({...quest, rewards: JSON.parse(quest.rewards)}));
         updateUIWithBestQuest(getBestQuest());
     }
 
@@ -258,6 +311,7 @@
             function embedGame() {
                 let script = lime.$scripts["HeroZero.min"].toString();
                 script = script.replace('this.gameDeviceCache', 'window.app=this;this.gameDeviceCache');
+                script = script.replace('this._timer=this._tooltipProgressStar1', 'window.train=this;this._timer=this._tooltipProgressStar1');
                 script = script.replace('this._btnVideoAdvertisment=this._btnUseResource=this._btnSlotMachine', 'window.stage=this;this._btnVideoAdvertisment=this._btnUseResource=this._btnSlotMachine');
                 script = script.replace('{this._leftSideButtons=null;', '{window.quest=this;this._leftSideButtons=null;');
                 eval("window.lime_script = " + script);
