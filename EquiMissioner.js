@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EquiMissioner
 // @namespace    https://github.com/lilyprism/EquiMissioner
-// @version      0.3
+// @version      0.4
 // @description  Best OpenSource Hero Zero Utility Extension
 // @author       LilyPrism
 // @license      GPL3.0
@@ -31,6 +31,7 @@
         TIME: 'TIME',
         MIN_ENERGY: 'MIN_ENERGY',
         HC: 'HC',
+        HEROBOOK: 'HEROBOOK_ITEM',
         EVENT_ITEM: 'EVENT_ITEM',
         SLOTMACHINE: 'SLOTMACHINE'
     });
@@ -88,6 +89,7 @@
                                         <option value="TIME">Time Quests</option>
                                         <option value="MIN_ENERGY">Minimum Energy</option>
                                         <option value="HC">HeroCon Items</option>
+                                        <option value="HEROBOOK_ITEM">Herobook Items</option>
                                         <option value="EVENT_ITEM">Event Items</option>
                                         <option value="SLOTMACHINE">Slotmachine Jetons</option>
                                     </select>
@@ -283,6 +285,8 @@
                 return quests.filter(q => q.fight_difficulty === 0).sort((a, b) => a.energy_cost - b.energy_cost);
             case MissionFocus.MIN_ENERGY:
                 return quests.sort((a, b) => a.energy_cost - b.energy_cost);
+            case MissionFocus.HEROBOOK:
+                return quests.sort((a, b) => b.rewards.hasOwnProperty("herobook_item") - a.rewards.hasOwnProperty("herobook_item") || a.energy_cost - b.energy_cost);
             case MissionFocus.HC:
                 return quests.sort((a, b) => b.rewards.hasOwnProperty("guild_competition_item") - a.rewards.hasOwnProperty("guild_competition_item") || a.energy_cost - b.energy_cost);
             case MissionFocus.EVENT_ITEM:
