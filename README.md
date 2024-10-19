@@ -3,6 +3,9 @@ The best open source HeroZero utility extension.
 
 ## Installation
 
+<a href="https://raw.githubusercontent.com/lilyprism/EquiMissioner/refs/heads/main/EquiMissioner.user.js">Click to install script</a>
+<small>(A userscript engine, like Tampermonkey, is required.)</small> 
+
 1. Install [Tampermonkey](https://tampermonkey.net/)
 2. Select the EquiMissioner file. View the file and click the _Raw_ button at the top of the file to view its source.
 3. Copy the source.
