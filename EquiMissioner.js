@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EquiMissioner
 // @namespace    https://github.com/lilyprism/EquiMissioner
-// @version      0.5
+// @version      0.6
 // @description  Best OpenSource Hero Zero Utility Extension
 // @author       LilyPrism
 // @license      GPL3.0
@@ -57,6 +57,7 @@
     let currentMissionFocus = GM_getValue("mission-focus", MissionFocus.XP);
     let currentFPS = GM_getValue("fps", 30);
     let max_energy_per_quest = GM_getValue("max-energy-quest", 20);
+    let auto_start_quest = GM_getValue("auto-start-quest", false);
     let quest_sense_booster_active = GM_getValue("sense-booster", false);
     let train_sense_booster_active = GM_getValue("train-sense-booster", false);
 
@@ -93,6 +94,10 @@
                                         <option value="EVENT_ITEM">Event Items</option>
                                         <option value="SLOTMACHINE">Slotmachine Jetons</option>
                                     </select>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="quest-auto-start">
+                                        <label class="form-check-label" for="quest-auto-start">Auto Start Quest</label>
+                                    </div>
                                     <button id="mission-go" class="btn btn-success w-100" style="padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x)!important;" type="button">Go</button>
                                 </div>
                             </div>
@@ -127,12 +132,19 @@
         document.getElementById('quest-focus').value = currentMissionFocus;
         document.getElementById('quest-sense-booster').checked = quest_sense_booster_active;
         document.getElementById('train-sense-booster').checked = train_sense_booster_active;
+        document.getElementById('quest-auto-start').checked = auto_start_quest;
         document.getElementById("fps-input").addEventListener("input", updateFPS);
         document.getElementById("mission-go").addEventListener("click", executeBestMission);
         document.getElementById("quest-focus").addEventListener("change", updateMissionFocus);
         document.getElementById("max-energy-quest").addEventListener("change", updateMaxEnergyQuest);
         document.getElementById("quest-sense-booster").addEventListener("change", updateQuestSenseBooster);
         document.getElementById("train-sense-booster").addEventListener("change", updateTrainSenseBooster);
+        document.getElementById("quest-auto-start").addEventListener("change", updateAutoStartQuest);
+    }
+
+    function updateAutoStartQuest(value) {
+        auto_start_quest = value.target.checked;
+        GM_setValue("auto-start-quest", auto_start_quest);
     }
 
     function updateTrainSenseBooster(value) {
@@ -180,6 +192,12 @@
             const targetButton = questButtons.find(button => button.get_tag()._data.id === bestQuest.id);
             if (targetButton) {
                 unsafeWindow.quest.clickQuest(targetButton);
+
+                setTimeout(() => {
+                    if (auto_start_quest && unsafeWindow.dialog_quest) {
+                        unsafeWindow.dialog_quest.onClickStartQuest();
+                    }
+                }, 200)
             } else {
                 console.error("Failed to find quest");
             }
@@ -316,6 +334,7 @@
                 let script = lime.$scripts["HeroZero.min"].toString();
                 script = script.replace('this.gameDeviceCache', 'window.app=this;this.gameDeviceCache');
                 script = script.replace('this._timer=this._tooltipProgressStar1', 'window.train=this;this._timer=this._tooltipProgressStar1');
+                script = script.replace('this._btnClose=this._btnStartQuest=this._b', 'window.dialog_quest=this;this._btnClose=this._btnStartQuest=this._b');
                 script = script.replace('this._btnVideoAdvertisment=this._btnUseResource=this._btnSlotMachine', 'window.stage=this;this._btnVideoAdvertisment=this._btnUseResource=this._btnSlotMachine');
                 script = script.replace('{this._leftSideButtons=null;', '{window.quest=this;this._leftSideButtons=null;');
                 eval("window.lime_script = " + script);
