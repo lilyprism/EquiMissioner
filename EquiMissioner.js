@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EquiMissioner
 // @namespace    https://github.com/lilyprism/EquiMissioner
-// @version      0.6
+// @version      0.7
 // @description  Best OpenSource Hero Zero Utility Extension
 // @author       LilyPrism
 // @license      GPL3.0
@@ -58,6 +58,8 @@
     let currentFPS = GM_getValue("fps", 30);
     let max_energy_per_quest = GM_getValue("max-energy-quest", 20);
     let auto_start_quest = GM_getValue("auto-start-quest", false);
+    let auto_claim_quest = GM_getValue("quest-auto-claim", false);
+    let auto_next_quest = GM_getValue("quest-auto-next", false);
     let quest_sense_booster_active = GM_getValue("sense-booster", false);
     let train_sense_booster_active = GM_getValue("train-sense-booster", false);
 
@@ -70,7 +72,7 @@
                 <button class="btn btn-primary position-absolute" style="z-index: 1050;" type="button" data-bs-toggle="collapse" data-bs-target="#missioner-cont" aria-expanded="false" aria-controls="missioner-cont">
                     <img src="https://github.com/lilyprism/EquiMissioner/blob/main/equimissioner.jpg?raw=true" alt="M" style="width: 32px;">
                 </button>
-                <div class="position-absolute top-0" style="height: 100vh;background: #262626cc">
+                <div class="position-absolute top-0" style="height: 100vh;background: #262626cc;overflow-y: auto">
                     <div class="collapse collapse-horizontal" id="missioner-cont">
                         <div class="pt-5 px-3" style="width: 300px;">
                             <div class="card text-bg-dark mb-2">
@@ -96,7 +98,15 @@
                                     </select>
                                     <div class="mb-3 form-check">
                                         <input type="checkbox" class="form-check-input" id="quest-auto-start">
-                                        <label class="form-check-label" for="quest-auto-start">Auto Start Quest</label>
+                                        <label class="form-check-label" for="quest-auto-start">Start Quest on Go</label>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="quest-auto-claim">
+                                        <label class="form-check-label" for="quest-auto-claim">Auto Claim Quest Rewards</label>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="quest-auto-next">
+                                        <label class="form-check-label" for="quest-auto-next">Start Next After Claim</label>
                                     </div>
                                     <button id="mission-go" class="btn btn-success w-100" style="padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x)!important;" type="button">Go</button>
                                 </div>
@@ -111,7 +121,7 @@
                             <div class="card text-bg-dark">
                                 <div class="card-body">
                                     <h5 class="card-title">Exploits</h5>
-                                    
+
                                     <div class="mb-3 form-check">
                                         <input type="checkbox" class="form-check-input" id="quest-sense-booster">
                                         <label class="form-check-label" for="quest-sense-booster">Quest Sense Booster</label>
@@ -133,6 +143,8 @@
         document.getElementById('quest-sense-booster').checked = quest_sense_booster_active;
         document.getElementById('train-sense-booster').checked = train_sense_booster_active;
         document.getElementById('quest-auto-start').checked = auto_start_quest;
+        document.getElementById('quest-auto-claim').checked = auto_claim_quest;
+        document.getElementById('quest-auto-next').checked = auto_next_quest;
         document.getElementById("fps-input").addEventListener("input", updateFPS);
         document.getElementById("mission-go").addEventListener("click", executeBestMission);
         document.getElementById("quest-focus").addEventListener("change", updateMissionFocus);
@@ -140,6 +152,18 @@
         document.getElementById("quest-sense-booster").addEventListener("change", updateQuestSenseBooster);
         document.getElementById("train-sense-booster").addEventListener("change", updateTrainSenseBooster);
         document.getElementById("quest-auto-start").addEventListener("change", updateAutoStartQuest);
+        document.getElementById("quest-auto-claim").addEventListener("change", updateAutoClaimQuest);
+        document.getElementById("quest-auto-next").addEventListener("change", updateAutoNextQuest);
+    }
+
+    function updateAutoNextQuest(value) {
+        auto_next_quest = value.target.checked;
+        GM_setValue("quest-auto-next", auto_next_quest);
+    }
+
+    function updateAutoClaimQuest(value) {
+        auto_claim_quest = value.target.checked;
+        GM_setValue("quest-auto-claim", auto_claim_quest);
     }
 
     function updateAutoStartQuest(value) {
@@ -232,6 +256,20 @@
             unsafeWindow.train._btnMostXPTrainingQuest.set_visible(train_sense_booster_active);
         }
     }, 200);
+
+    setInterval(function() {
+        if (!auto_claim_quest || !unsafeWindow.quest_complete || !unsafeWindow.quest_complete._btnClose)
+            return;
+
+        unsafeWindow.quest_complete.onClickClose();
+
+        if (!auto_next_quest)
+            return;
+
+        setTimeout(function() {
+            executeBestMission();
+        }, 1000);
+    }, 2000);
 
     function setupRequestProxy() {
         const originalOpen = XMLHttpRequest.prototype.open;
@@ -335,6 +373,7 @@
                 script = script.replace('this.gameDeviceCache', 'window.app=this;this.gameDeviceCache');
                 script = script.replace('this._timer=this._tooltipProgressStar1', 'window.train=this;this._timer=this._tooltipProgressStar1');
                 script = script.replace('this._btnClose=this._btnStartQuest=this._b', 'window.dialog_quest=this;this._btnClose=this._btnStartQuest=this._b');
+                script = script.replace('this._quest.get_isTimeQuest()', 'window.quest_complete=this;this._quest.get_isTimeQuest()');
                 script = script.replace('this._btnVideoAdvertisment=this._btnUseResource=this._btnSlotMachine', 'window.stage=this;this._btnVideoAdvertisment=this._btnUseResource=this._btnSlotMachine');
                 script = script.replace('{this._leftSideButtons=null;', '{window.quest=this;this._leftSideButtons=null;');
                 eval("window.lime_script = " + script);
