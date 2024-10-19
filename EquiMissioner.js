@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EquiMissioner
 // @namespace    https://github.com/lilyprism/EquiMissioner
-// @version      0.1
+// @version      0.2
 // @description  Best OpenSource Hero Zero Utility Extension
 // @author       LilyPrism
 // @license      GPL3.0
@@ -55,7 +55,7 @@
     let currentQuests = [];
     let currentMissionFocus = GM_getValue("mission-focus", MissionFocus.XP);
     let currentFPS = GM_getValue("fps", 30);
-    const MAX_ENERGY_PER_QUEST = 20;
+    let max_energy_per_quest = GM_getValue("max-energy-quest", 20);
 
     function createScriptUI() {
         const mainDiv = document.createElement('div');
@@ -63,8 +63,8 @@
         mainDiv.className = "fixed-top";
         mainDiv.innerHTML = `
             <div style="z-index: 1050">
-                <button class="btn btn-primary position-absolute" style="z-index: 1050;padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x)!important;" type="button" data-bs-toggle="collapse" data-bs-target="#missioner-cont" aria-expanded="false" aria-controls="missioner-cont">
-                    M
+                <button class="btn btn-primary position-absolute" style="z-index: 1050;" type="button" data-bs-toggle="collapse" data-bs-target="#missioner-cont" aria-expanded="false" aria-controls="missioner-cont">
+                    <img src="https://github.com/lilyprism/EquiMissioner/blob/main/equimissioner.jpg?raw=true" alt="M" style="width: 32px;">
                 </button>
                 <div class="position-absolute top-0" style="height: 100vh;background: #262626cc">
                     <div class="collapse collapse-horizontal" id="missioner-cont">
@@ -76,6 +76,9 @@
                                     <p id="m-xp" class="mb-0 card-text">XP: 0</p>
                                     <p id="m-coins" class="mb-0 card-text">Coins: 0</p>
                                     <p id="m-duration" class="mb-2 card-text">Duration: 0</p>
+                                    <label class="form-label">Max Energy:</label>
+                                    <input type="number" class="form-control mb-2" id="max-energy-quest" min="1" max="50" value="${max_energy_per_quest}">
+                                    <label class="form-label">Quest Focus:</label>
                                     <select class="form-select mb-2" id="quest-focus">
                                         <option value="XP">XP / Energy</option>
                                         <option value="COINS">Coins / Energy</option>
@@ -107,6 +110,13 @@
         document.getElementById("fps-input").addEventListener("input", updateFPS);
         document.getElementById("mission-go").addEventListener("click", executeBestMission);
         document.getElementById("quest-focus").addEventListener("change", updateMissionFocus);
+        document.getElementById("max-energy-quest").addEventListener("change", updateMaxEnergyQuest);
+    }
+
+    function updateMaxEnergyQuest(event) {
+        max_energy_per_quest = event.target.value;
+        GM_setValue("max-energy-quest", max_energy_per_quest);
+        updateUIWithBestQuest(getBestQuest());
     }
 
     function updateMissionFocus(event) {
@@ -201,7 +211,7 @@
 
         availableQuests = sortQuestsByFocus(availableQuests);
 
-        if (availableQuests.length > 0 && availableQuests[0].energy_cost > MAX_ENERGY_PER_QUEST) {
+        if (availableQuests.length > 0 && availableQuests[0].energy_cost > max_energy_per_quest) {
             availableQuests.sort((a, b) => a.energy_cost - b.energy_cost);
         }
 
