@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EquiMissioner
 // @namespace    https://github.com/lilyprism/EquiMissioner
-// @version      1.1
+// @version      1.2
 // @description  Best OpenSource Hero Zero Utility Userscript
 // @author       LilyPrism
 // @license      GPL3.0
@@ -164,6 +164,7 @@
                                             <input type="checkbox" class="form-check-input" id="train-sense-booster">
                                             <label class="form-check-label" for="train-sense-booster">Train Sense Booster</label>
                                         </div>
+                                        <button id="buy-energy" class="btn btn-success w-100" style="padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x)!important;" type="button">Buy Energy</button>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center mb-2">
@@ -196,6 +197,7 @@
             const questAutoNextCheckbox = document.getElementById('quest-auto-next');
             const fpsInput = document.getElementById('fps-input');
             const missionGoButton = document.getElementById('mission-go');
+            const buyEnergyButton = document.getElementById('buy-energy');
             const maxEnergyQuestInput = document.getElementById('max-energy-quest');
 
             // Set initial values
@@ -209,6 +211,7 @@
             // Set up event listeners
             fpsInput.addEventListener('input', this.updateFPS.bind(this));
             missionGoButton.addEventListener('click', this.executeBestMission.bind(this));
+            buyEnergyButton.addEventListener('click', this.buyMoreEnergy.bind(this));
             questFocusSelect.addEventListener('change', this.updateMissionFocus.bind(this));
             maxEnergyQuestInput.addEventListener('change', this.updateMaxEnergyQuest.bind(this));
             questSenseBoosterCheckbox.addEventListener('change', this.updateQuestSenseBooster.bind(this));
@@ -412,6 +415,15 @@
         }
 
         /**
+         * Shows the dialog to buy more energy
+         */
+        buyMoreEnergy() {
+            if (document?.Missioner?.quest) {
+                document.Missioner.quest.onClickBuyEnergy();
+            }
+        }
+
+        /**
          * Executes the best quest based on the current settings.
          */
         executeBestMission() {
@@ -536,6 +548,8 @@
                     script = script.replace('this._quest.get_isTimeQuest()', 'document.Missioner.quest_complete=this;this._quest.get_isTimeQuest()');
                     script = script.replace('this._btnVideoAdvertisment=this._btnUseResource=this._btnSlotMachine', 'document.Missioner.stage=this;this._btnVideoAdvertisment=this._btnUseResource=this._btnSlotMachine');
                     script = script.replace('{this._leftSideButtons=null;', '{document.Missioner.quest=this;this._leftSideButtons=null;');
+                    script = script.replace('this._onLoadedCharacter=this', 'document.Missioner.view_manager=this;this._onLoadedCharacter=this');
+                    script = script.replace('this._btnCurrentDungeonQuest=this._btnBack', 'document.Missioner.dungeon=this;this._btnCurrentDungeonQuest=this._btnBack');
                     eval("window.lime_script = " + script);
                     lime.$scripts["HeroZero.min"] = window.lime_script;
                     lime.embed("HeroZero.min", "appClient", appWidth, appHeight, {
