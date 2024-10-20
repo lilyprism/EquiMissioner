@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EquiMissioner
 // @namespace    https://github.com/lilyprism/EquiMissioner
-// @version      1.0
+// @version      1.1
 // @description  Best OpenSource Hero Zero Utility Userscript
 // @author       LilyPrism
 // @license      GPL3.0
@@ -166,10 +166,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-center">
+                                <div class="d-flex justify-content-center mb-2">
                                     <a href="https://discord.gg/ZEXdQreFxF" target="_blank" class="p-2 bg-dark rounded">
                                         <img src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord" style="width: 32px">
                                     </a>
+                                </div>
+                                <div class="d-flex justify-content-center mb-2">
+                                    <p>Made with ♥ by LilyPrism</p>
                                 </div>
                             </div>
                         </div>
@@ -241,7 +244,7 @@
                             self.handleQuestChange(jsonResponse.data.quests);
                         }
                     }
-                    let reportingError = data.includes("gameReportError");
+                    let reportingError = data && data.includes("gameReportError");
                     if (!reportingError && originalOnReadyStateChange) {
                         originalOnReadyStateChange.apply(xhr, arguments);
                     } else if (originalOnReadyStateChange) {
