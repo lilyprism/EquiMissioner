@@ -2,6 +2,7 @@
 The best open source HeroZero utility usercript.
 
 [![INSTALL](https://img.shields.io/badge/INSTALL-GREEN?style=for-the-badge)](https://raw.githubusercontent.com/lilyprism/EquiMissioner/refs/heads/main/EquiMissioner.user.js)
+[![Discord](https://img.shields.io/badge/Join%20our%20Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/ZEXdQreFxF)
 
 <small>(A userscript engine, like Tampermonkey, is required.)</small>
 
