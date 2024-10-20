@@ -33,6 +33,7 @@ The best open-source HeroZero utility userscript.
 - **Exploits:**
   - Activate the "Quest Sense Booster" for a free quest sense booster.
   - Activate the "Train Sense Booster" for the train sense booster buttons, no added benefits.
+  - "Buy Energy" without requiring less than 50 energy to do so.
 
 ## Contributing
 
