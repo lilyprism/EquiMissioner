@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EquiMissioner
 // @namespace    https://github.com/Equihub/EquiMissioner
-// @version      1.3
+// @version      1.4
 // @description  Best OpenSource Hero Zero Utility Userscript
 // @author       LilyPrism @ Equihub
 // @license      GPL3.0
@@ -10,6 +10,7 @@
 // @updateURL    https://github.com/Equihub/EquiMissioner/blob/main/EquiMissioner.user.js?raw=true
 // @icon         https://github.com/Equihub/EquiMissioner/blob/main/equimissioner.jpg?raw=true
 // @require      https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js
 // @resource     BS5_CSS https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
@@ -105,7 +106,7 @@
             mainDiv.innerHTML = `
                 <div style="z-index: 1050">
                     <button class="btn btn-primary position-absolute" style="z-index: 1050;" type="button" data-bs-toggle="collapse" data-bs-target="#missioner-cont" aria-expanded="false" aria-controls="missioner-cont">
-                        <img src="https://github.com/lilyprism/EquiMissioner/blob/main/equimissioner.jpg?raw=true" alt="M" style="width: 32px;">
+                        <img src="https://github.com/Equihub/EquiMissioner/blob/main/equimissioner.jpg?raw=true" alt="M" style="width: 32px;">
                     </button>
                     <div class="position-absolute top-0" style="height: 100vh;background: #262626cc;overflow-y: auto">
                         <div class="collapse collapse-horizontal" id="missioner-cont">
@@ -113,10 +114,11 @@
                                 <div class="card text-bg-dark mb-2">
                                     <div class="card-body">
                                         <h5 class="card-title">Best Mission</h5>
-                                        <p id="m-city" class="mb-0 card-text">City</p>
-                                        <p id="m-xp" class="mb-0 card-text">XP: 0</p>
-                                        <p id="m-coins" class="mb-0 card-text">Coins: 0</p>
-                                        <p id="m-duration" class="mb-2 card-text">Duration: 0</p>
+                                        <p id="m-city" class="mb-0 card-text text-center">City</p>
+                                        <p class="mb-0 card-text"><img src="https://hz-static-2.akamaized.net/assets/emoticons_big/xp.png" alt="XP" style="width: 24px"> <span id="m-xp"></span></p>
+                                        <p class="mb-0 card-text"><img src="https://hz-static-2.akamaized.net/assets/emoticons_big/coin.png" alt="Coins" style="width: 24px"> <span id="m-coins"></p>
+                                        <p class="mb-0 card-text"><img src="https://hz-static-2.akamaized.net/assets/emoticons_big/energy.png" alt="Coins" style="width: 24px"> <span id="m-cost"></p>
+                                        <p class="mb-2 card-text">Duration: <span id="m-duration"></p>
                                         <label class="form-label">Max Energy:</label>
                                         <input type="number" class="form-control mb-2" id="max-energy-quest" min="1" max="50" value="${this.maxEnergyPerQuest}">
                                         <label class="form-label">Quest Focus:</label>
@@ -164,7 +166,7 @@
                                             <input type="checkbox" class="form-check-input" id="train-sense-booster">
                                             <label class="form-check-label" for="train-sense-booster">Train Sense Booster</label>
                                         </div>
-                                        <button id="buy-energy" class="btn btn-success w-100" style="padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x)!important;" type="button">Buy Energy</button>
+                                        <button id="buy-energy" class="btn btn-primary w-100" style="padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x)!important;" type="button">Buy Energy</button>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center mb-2">
@@ -275,9 +277,10 @@
         updateUIWithBestQuest(quest) {
             if (!quest) return;
             document.getElementById("m-city").textContent = QUEST_STAGES[quest.stage];
-            document.getElementById("m-xp").textContent = "XP: " + (quest.rewards.xp || 0);
-            document.getElementById("m-coins").textContent = "Coins: " + (quest.rewards.coins || 0);
-            document.getElementById("m-duration").textContent = "Duration: " + (quest.duration / 60) + " Minutes";
+            document.getElementById("m-xp").textContent = numeral(quest.rewards.xp || 0).format('0,0');
+            document.getElementById("m-coins").textContent = numeral(quest.rewards.coins || 0).format('0,0');
+            document.getElementById("m-cost").textContent = numeral(quest.energy_cost).format('0,0');
+            document.getElementById("m-duration").textContent = (quest.duration / 60) + " Minutes";
         }
 
         /**
