@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         EquiMissioner
-// @namespace    https://github.com/lilyprism/EquiMissioner
-// @version      1.2
+// @namespace    https://github.com/Equihub/EquiMissioner
+// @version      1.3
 // @description  Best OpenSource Hero Zero Utility Userscript
-// @author       LilyPrism
+// @author       LilyPrism @ Equihub
 // @license      GPL3.0
 // @match        https://*.herozerogame.com
-// @downloadURL  https://github.com/lilyprism/EquiMissioner/blob/main/EquiMissioner.user.js?raw=true
-// @updateURL    https://github.com/lilyprism/EquiMissioner/blob/main/EquiMissioner.user.js?raw=true
-// @icon         https://github.com/lilyprism/EquiMissioner/blob/main/equimissioner.jpg?raw=true
+// @downloadURL  https://github.com/Equihub/EquiMissioner/blob/main/EquiMissioner.user.js?raw=true
+// @updateURL    https://github.com/Equihub/EquiMissioner/blob/main/EquiMissioner.user.js?raw=true
+// @icon         https://github.com/Equihub/EquiMissioner/blob/main/equimissioner.jpg?raw=true
 // @require      https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js
 // @resource     BS5_CSS https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css
 // @grant        GM_getResourceText
