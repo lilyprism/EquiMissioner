@@ -1,11 +1,11 @@
-<img src="https://github.com/lilyprism/EquiMissioner/blob/main/equimissioner.jpg?raw=true" alt="EquiMissioner Logo" width="256px">
+<img src="https://github.com/Equihub/EquiMissioner/blob/main/equimissioner.jpg?raw=true" alt="EquiMissioner Logo" width="256px">
 
 # EquiMissioner
 The best open-source HeroZero utility userscript.
 
 **We pride ourselves on making EquiMissioner open-source and free of any tracking, unlike other userscripts.**
 
-[![INSTALL](https://img.shields.io/badge/INSTALL-GREEN?style=for-the-badge)](https://raw.githubusercontent.com/lilyprism/EquiMissioner/refs/heads/main/EquiMissioner.user.js)
+[![INSTALL](https://img.shields.io/badge/INSTALL-GREEN?style=for-the-badge)](https://raw.githubusercontent.com/Equihub/EquiMissioner/refs/heads/main/EquiMissioner.user.js)
 [![Discord](https://img.shields.io/badge/Join%20our%20Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/ZEXdQreFxF)
 
 <small>(A userscript engine, like Tampermonkey, is required.)</small>
@@ -13,7 +13,7 @@ The best open-source HeroZero utility userscript.
 ## Installation
 
 1. Install [Tampermonkey](https://tampermonkey.net/)
-2. [Click to install script](https://raw.githubusercontent.com/lilyprism/EquiMissioner/refs/heads/main/EquiMissioner.user.js)
+2. [Click to install script](https://raw.githubusercontent.com/Equihub/EquiMissioner/refs/heads/main/EquiMissioner.user.js)
 3. Enjoy the game!
 
 ## Features
